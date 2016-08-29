@@ -23,7 +23,7 @@ add to application.js
 ## step.2 安裝model、controller
 ```
 rails g model Product title price:integer
-rails g controller product
+rails g controller products
 rake db:migrate
 ```
 在product.rb加入驗證碼，注意validates要加s
@@ -51,14 +51,64 @@ p.count
 你可以看到有五筆資料
 
 
-## step.3
-設定index頁面
+## step.3 設定index頁面
 
-設定路由
+設定路由，在route.rb加入
+```
+resource :product
+root "product#index"
+```
 
 先在products_controller加入index action
+```
+def index
+  @products = Product.all
+end
+```
 
 然後新增views/product/index.html.erb
-link_to 加上 remote: true 就是跟 rails 說這個地方我們要使用 AJAX
+```html
+<div class="container">
+  <div class="well">
+    <!-- link_to 加上 remote: true 就是跟 rails 說這個地方我們要使用 AJAX -->
+    <!-- 像這裡他在跑完 new action 之後，就會去找 new.js.erb 檔 -->
+    <%= link_to "New Product", new_product_path, remote: true, class: "btn btn-primary" %>
+  </div>
+</div>
 
-然後新增views/product/_index.html.erb
+<table class="table table-bordered table-striped">
+  <thead>
+    <tr>
+      <th>Title</th>
+      <th>Price</th>
+      <td>Edit</td>
+      <td>Delete</td>
+    </tr>
+  </thead>
+
+  <tbody class="product-index">
+    <%= render "index" %>
+    <!-- tbody 裡就是資料會變動的地方，資料變動時只重新載入此處 -->
+  </tbody>
+</table>
+
+<!-- 跳出視窗：我們可以利用 AJAX 跟 JavaScript 塞東西到裡面去 -->
+<!-- 譬如要 Edit Product，我們就可以塞 Edit 的 form 到這裡 -->
+<div id="product-modal" class="modal fade"></div>
+```
+
+然後新增views/product/\_index.html.erb
+```html
+<% @products.each do |product| %>
+  <tr>
+    <td><%= product.title %></td>
+    <td><%= product.price %></td>
+    <td><%= link_to "Edit", edit_product_path(product),
+                            remote: true, class: "btn btn-primary" %></td>
+    <td><%= link_to "Delete", product_path(product), method: :delete,
+                              remote: true, class: "btn btn-primary",
+                              data: { confirm: "Are you sure?" } %></td>
+  </tr>
+<% end %>
+
+```

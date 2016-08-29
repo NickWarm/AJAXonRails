@@ -1,0 +1,4 @@
+// 把 _new.html.erb 內容塞到 modal 裡，j 是 escape_javascript 的 sugar 語法
+$("#product-modal").html("<%= j render 'new' %>")
+// 讓 modal 跳出來
+$("product-modal").modal("show")
