@@ -33,6 +33,13 @@ class ProductsController < ApplicationController
     end
   end
 
+  def destroy
+    @products = Product.all
+    @product = Product.find(params[:id])
+    @product.destroy
+    render "success"
+  end
+
   private
   def product_params
     params.require(:product).permit(:title, :price)

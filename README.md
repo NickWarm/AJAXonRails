@@ -1,4 +1,4 @@
-### [教材出處](http://kakas-blog.logdown.com/posts/737732-using-ajax-in-rails-simple-examples)
+### 教材出處：[在 Rails 中使用 AJAX 簡易範例](http://kakas-blog.logdown.com/posts/737732-using-ajax-in-rails-simple-examples)
 ## step.1 安裝Bootstrap
 ```
 rails new kakasAJAX
@@ -158,7 +158,7 @@ $("#product-modal").modal("show")
 ## step.4 new action
 
 products_controller.rb
-```
+```rb
 def new
   @product = Product.new
 end
@@ -172,7 +172,7 @@ link_to 加上 remote: true 就是跟 rails 說這個地方我們要使用 AJAX
 像這裡他在跑完 new action 之後，就會去找 new.js.erb 檔
 
 add views/products/new.js.erb
-```
+```js
 // 把 _new.html.erb 內容塞到 modal 裡，j 是 escape_javascript 的 sugar 語法
 $("#product-modal").html("<%= j render 'new' %>")
 
@@ -181,7 +181,7 @@ $("#product-modal").modal("show")
 ```
 
 add views/products/\_new.html.erb
-```
+```html
 <div class="modal-dialog">
   <div class="modal-content">
     <div class="modal-header">
@@ -193,7 +193,7 @@ add views/products/\_new.html.erb
 ```
 
 add views/products/\_form.html.erb
-```
+```html
 <%= bootstrap_form_for @product, remote: true do |f| %>
   <div class="modal-body">
     <%= f.text_field :title %>
@@ -208,7 +208,7 @@ add views/products/\_form.html.erb
 ```
 
 add create action to controller
-```
+```rb
 class ProductsController < ApplicationController
 ...
 
@@ -232,7 +232,7 @@ end
 ```
 
 add views/products/success.js.erb
-```
+```js
 $(".product-index").html("<%= j render 'index' %>")
 
 // 把modal隱藏起來
@@ -244,30 +244,30 @@ $(#product-modal).modal("hide")
 
 views/products/success.js.erb
 手誤寫成
-```
+```js
 $(#product-modal).modal("hide")
 ```
 因為選擇器沒用""包起來所以失敗，應該是
-```
+```js
 $("#product-modal").modal("hide")
 ```
 
 ## step.5 edit action
 add edit action to products_controller
-```
+```rb
 def edit
   @product = Product.find(params[:id])
 end
 ```
 
 add views/products/edit.js.erb
-```
+```js
 $("#product-modal").html("<%= j render "edit" %>")
 $("#product-modal").modal("show")
 ```
 
 add views/products/\_edit.html.erb
-```
+```html
 <div class="modal-dialog">
   <div class="modal-content">
     <div class="modal-header">
@@ -279,7 +279,7 @@ add views/products/\_edit.html.erb
 ```
 
 add update action to products_controller
-```
+```rb
 def update
   @products = Product.all
   @product = Product.find(params[:id])
@@ -291,3 +291,17 @@ def update
   end
 end
 ```
+
+## destroy action
+
+add destroy action to products_controller
+```rb
+def destroy
+  @products = Product.all
+  @product = Product.find(params[:id])
+  @product.destroy
+  render "success"
+end
+```
+
+### 臨摹帖子完成
