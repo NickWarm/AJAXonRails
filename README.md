@@ -239,3 +239,55 @@ $(".product-index").html("<%= j render 'index' %>")
 $(#product-modal).modal("hide")
 
 ```
+
+##  修正AJAX新增表單後，沒有自動關掉modal的bug
+
+views/products/success.js.erb
+手誤寫成
+```
+$(#product-modal).modal("hide")
+```
+因為選擇器沒用""包起來所以失敗，應該是
+```
+$("#product-modal").modal("hide")
+```
+
+## step.5 edit action
+add edit action to products_controller
+```
+def edit
+  @product = Product.find(params[:id])
+end
+```
+
+add views/products/edit.js.erb
+```
+$("#product-modal").html("<%= j render "edit" %>")
+$("#product-modal").modal("show")
+```
+
+add views/products/\_edit.html.erb
+```
+<div class="modal-dialog">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3>Edit <%= @product.title %></h3>
+    </div>
+    <%= render "form" %>
+  </div>
+</div>
+```
+
+add update action to products_controller
+```
+def update
+  @products = Product.all
+  @product = Product.find(params[:id])
+
+  if @product.update(product_params)
+    render "success"
+  else
+    render :edit
+  end
+end
+```

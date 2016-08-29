@@ -18,6 +18,21 @@ class ProductsController < ApplicationController
     end
   end
 
+  def edit
+    @product = Product.find(params[:id])
+  end
+
+  def update
+    @products = Product.all
+    @product = Product.find(params[:id])
+
+    if @product.update(product_params)
+      render "success"
+    else
+      render :edit
+    end
+  end
+
   private
   def product_params
     params.require(:product).permit(:title, :price)
