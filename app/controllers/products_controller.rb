@@ -12,7 +12,7 @@ class ProductsController < ApplicationController
     @product = Product.new(product_params)
 
     if @product.save
-      render "sucess"
+      render "success"
     else
       render :new
     end

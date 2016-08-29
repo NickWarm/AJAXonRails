@@ -128,3 +128,29 @@ rake db:migrate
 ```
 rake db:seed
 ```
+
+## 解掉modal跳不出來的bug
+這次小錯誤滿多的
+
+products_controller.rb
+create action裡面，要存檔的那段code，success筆誤成sucess，應該是
+```
+render "success"
+```
+
+views/products/\_new.html.erb
+裡面第三層div筆誤寫成model，應該是
+```
+div.modal-header
+```
+
+最後是一直跳不出來的關鍵
+views/products/new.js.erb，jquery selector要選#product-modal才對，但我少寫了#
+最初筆誤
+```
+$("product-modal").modal("show")
+```
+正確應該是
+```
+$("#product-modal").modal("show")
+```
