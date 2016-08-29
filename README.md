@@ -134,7 +134,7 @@ rake db:seed
 
 products_controller.rb
 create action裡面，要存檔的那段code，success筆誤成sucess，應該是
-```
+```rb
 render "success"
 ```
 
@@ -147,10 +147,95 @@ div.modal-header
 最後是一直跳不出來的關鍵
 views/products/new.js.erb，jquery selector要選#product-modal才對，但我少寫了#
 最初筆誤
-```
+```js
 $("product-modal").modal("show")
 ```
 正確應該是
-```
+```js
 $("#product-modal").modal("show")
+```
+
+## step.4 new action
+
+products_controller.rb
+```
+def new
+  @product = Product.new
+end
+```
+
+我們在index.html.erb有段link_to
+```
+<%= link_to "New Product", new_product_path, remote: true, class: "btn btn-primary" %>
+```
+link_to 加上 remote: true 就是跟 rails 說這個地方我們要使用 AJAX
+像這裡他在跑完 new action 之後，就會去找 new.js.erb 檔
+
+add views/products/new.js.erb
+```
+// 把 _new.html.erb 內容塞到 modal 裡，j 是 escape_javascript 的 sugar 語法
+$("#product-modal").html("<%= j render 'new' %>")
+
+// 讓 modal 跳出來
+$("#product-modal").modal("show")
+```
+
+add views/products/\_new.html.erb
+```
+<div class="modal-dialog">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3>New Product</h3>
+    </div>
+    <%= render "form" %>
+  </div>
+</div>
+```
+
+add views/products/\_form.html.erb
+```
+<%= bootstrap_form_for @product, remote: true do |f| %>
+  <div class="modal-body">
+    <%= f.text_field :title %>
+    <%= f.text_field :price %>
+  </div>
+  <div class="modal-footer">
+    <%= f.submit class: "btn btn-primary" %>
+    <%= link_to "取消", "#", class: "btn btn-default",
+                            data: { dissmiss: "modal" } %>
+  </div>
+<% end %>
+```
+
+add create action to controller
+```
+class ProductsController < ApplicationController
+...
+
+  def create
+    @products = Product.all #給_index.html.erb用
+    @product = Product.new(product_params)
+
+    if @product.save
+      render "success"
+    else
+      render :new
+    end
+  end
+
+  private
+  def product_params
+    params.require(:product).permit(:title, :price)
+  end
+end
+
+```
+
+add views/products/success.js.erb
+```
+$(".product-index").html("<%= j render 'index' %>")
+
+// 把modal隱藏起來
+$(#product-modal).modal("hide")
+
 ```
