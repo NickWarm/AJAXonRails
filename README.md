@@ -20,34 +20,45 @@ add to application.js
 ```
 //= require bootstrap/modal
 ```
-## step.2
-
-安裝model、controller
-
+## step.2 安裝model、controller
+```
 rails g model Product title price:integer
 rails g controller product
 rake db:migrate
-
+```
 在product.rb加入驗證碼，注意validates要加s
-
+```
 class Product < ActiveRecord::Base
   validates :title, presence: true
   validates :price, presence: true, numericality: true
 end
-
+```
 增加種子檔，讓你一次輸入五筆資料，去db/seed.rb輸入
-
+```
 Product.delete_all
 Product.create!(title: "大麥客", price: 55)
 Product.create!(title: "可樂", price: 30)
 Product.create!(title: "中薯", price: 40)
 Product.create!(title: "大薯", price: 55)
 Product.create!(title: "雞塊", price: 45)
-
+```
 完成後，你可以進入console
-
+```
 rails c
 p = Product
 p.count
-
+```
 你可以看到有五筆資料
+
+
+## step.3
+設定index頁面
+
+設定路由
+
+先在products_controller加入index action
+
+然後新增views/product/index.html.erb
+link_to 加上 remote: true 就是跟 rails 說這個地方我們要使用 AJAX
+
+然後新增views/product/_index.html.erb

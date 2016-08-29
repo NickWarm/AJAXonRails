@@ -1,0 +1,26 @@
+<div class="container">
+  <div class="well">
+    <!-- link_to 加上 remote: true 就是跟 rails 說這個地方我們要使用 AJAX -->
+    <!-- 像這裡他在跑完 new action 之後，就會去找 new.js.erb 檔 -->
+    <%= link_to "New Product", new_product_path, remote: true, class: "btn btn-primary" %>
+  </div>
+</div>
+
+<table class="table table-bordered table-striped">
+  <thead>
+    <tr>
+      <th>Title</th>
+      <th>Price</th>
+      <td>Edit</td>
+      <td>Delete</td>
+    </tr>
+  </thead>
+  
+  <tbody class="product-index">
+    <%= render "index" %> <!-- tbody 裡就是資料會變動的地方，資料變動時只重新載入此處 -->
+  </tbody>
+</table>
+
+<!-- 跳出視窗：我們可以利用 AJAX 跟 JavaScript 塞東西到裡面去 -->
+<!-- 譬如要 Edit Product，我們就可以塞 Edit 的 form 到這裡 -->
+<div id="product-modal" class="modal fade"></div>
