@@ -55,8 +55,8 @@ p.count
 
 設定路由，在route.rb加入
 ```
-resource :product
-root "product#index"
+resources :products
+root "products#index"
 ```
 
 先在products_controller加入index action
@@ -111,4 +111,20 @@ end
   </tr>
 <% end %>
 
+```
+## 錯誤成功修正
+
+首先修改route.rb，改成
+```
+resources :products
+```
+然後drop out db，重建一個
+```
+rake db:drop
+rake db:create
+rake db:migrate
+```
+重新跑一次seed
+```
+rake db:seed
 ```
