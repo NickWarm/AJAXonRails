@@ -9,7 +9,10 @@ add to Gemfile
 gem "bootstrap"
 gem "bootstrap_form"
 ```
-rename application.css to application.css.scss
+
+然後`bundle install`
+
+rename **application.css** to **application.css.scss**
 
 add to application.css.scss
 ```
@@ -27,14 +30,14 @@ rails g controller products
 rake db:migrate
 ```
 在product.rb加入驗證碼，注意validates要加s
-```
+```rb
 class Product < ActiveRecord::Base
   validates :title, presence: true
   validates :price, presence: true, numericality: true
 end
 ```
 增加種子檔，讓你一次輸入五筆資料，去db/seed.rb輸入
-```
+```rb
 Product.delete_all
 Product.create!(title: "大麥客", price: 55)
 Product.create!(title: "可樂", price: 30)
@@ -42,6 +45,8 @@ Product.create!(title: "中薯", price: 40)
 Product.create!(title: "大薯", price: 55)
 Product.create!(title: "雞塊", price: 45)
 ```
+然後 `rake db:seed`
+
 完成後，你可以進入console
 ```
 rails c
@@ -54,13 +59,13 @@ p.count
 ## step.3 設定index頁面
 
 設定路由，在route.rb加入
-```
+```rb
 resources :products
 root "products#index"
 ```
 
 先在products_controller加入index action
-```
+```rb
 def index
   @products = Product.all
 end
@@ -92,7 +97,7 @@ end
   </tbody>
 </table>
 
-<!-- 跳出視窗：我們可以利用 AJAX 跟 JavaScript 塞東西到裡面去 -->
+<!-- create、update form的跳出視窗：我們可以利用 AJAX 跟 JavaScript 塞東西到裡面去 -->
 <!-- 譬如要 Edit Product，我們就可以塞 Edit 的 form 到這裡 -->
 <div id="product-modal" class="modal fade"></div>
 ```
@@ -112,10 +117,10 @@ end
 <% end %>
 
 ```
-## 錯誤成功修正
+#### 錯誤成功修正
 
 首先修改route.rb，改成
-```
+```rb
 resources :products
 ```
 然後drop out db，重建一個
@@ -129,7 +134,7 @@ rake db:migrate
 rake db:seed
 ```
 
-## 解掉modal跳不出來的bug
+#### 解掉modal跳不出來的bug
 這次小錯誤滿多的
 
 products_controller.rb
@@ -230,6 +235,7 @@ class ProductsController < ApplicationController
 end
 
 ```
+`render "success"`是render`success.js.erb`，而`render :new`是render`_new.html.erb`
 
 add views/products/success.js.erb
 ```js
@@ -240,7 +246,7 @@ $(#product-modal).modal("hide")
 
 ```
 
-##  修正AJAX新增表單後，沒有自動關掉modal的bug
+####  修正AJAX新增表單後，沒有自動關掉modal的bug
 
 views/products/success.js.erb
 手誤寫成
@@ -292,7 +298,7 @@ def update
 end
 ```
 
-## destroy action
+## step.6 destroy action
 
 add destroy action to products_controller
 ```rb
@@ -304,4 +310,4 @@ def destroy
 end
 ```
 
-### 臨摹帖子完成
+## 臨摹帖子完成
